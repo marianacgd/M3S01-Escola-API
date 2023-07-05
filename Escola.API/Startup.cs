@@ -1,4 +1,5 @@
 using Escola.API.DataBase;
+using Escola.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,9 @@ namespace Escola.API
         {
             services.AddDbContext<EscolaDbContexto>();
             services.AddControllers();
+
+            services.AddScoped<IAlunoService,AlunoService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Escola.API", Version = "v1" });

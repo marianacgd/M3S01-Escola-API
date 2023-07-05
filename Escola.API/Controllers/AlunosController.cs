@@ -1,8 +1,11 @@
 ﻿using Escola.API.DataBase;
 using Escola.API.DTO;
+using Escola.API.Exceptions;
 using Escola.API.Model;
+using Escola.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,27 +16,34 @@ namespace Escola.API.Controllers
     public class AlunosController : ControllerBase
     {
         private readonly EscolaDbContexto _context;
+        private readonly IAlunoService _alunoService;
 
-        public AlunosController(EscolaDbContexto contexto)
+        public AlunosController(EscolaDbContexto contexto, IAlunoService alunoService)
         {
             _context = contexto;
+            _alunoService = alunoService;
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] AlunoDTO alunoDTO )
+        public IActionResult Post([FromBody] AlunoDTO alunoDTO)
         {
-            var aluno = new Aluno(alunoDTO);
-            var alunoExist =  _context.Alunos.Any(x => x.Email == aluno.Email);
-            if (alunoExist)
+            try
             {
-                return StatusCode(StatusCodes.Status409Conflict, "email já cadastrado");
+                var aluno = new Aluno(alunoDTO);
+                //Chamada da service
+                aluno = _alunoService.Criar(aluno);
+
+                return Ok(new AlunoDTO(aluno));
+            }
+            catch (RegistroDuplicadoException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
                 //return Conflict("email já existe")
             }
-
-            _context.Alunos.Add(aluno);
-            _context.SaveChanges();
-
-            return Ok(aluno);
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet]
@@ -51,14 +61,26 @@ namespace Escola.API.Controllers
         [Route("/{id}")]
         public IActionResult GetComId([FromRoute] int id)
         {
-            Aluno aluno = _context.Alunos.FirstOrDefault(x => x.Id == id);
-
-            if (aluno == null)
+            try
             {
-                return NotFound("Aluno não encontrado");
+                return Ok(new AlunoDTO(_alunoService.ObterPorId(id)));
             }
 
-            return Ok(new AlunoDTO(aluno));
+            catch (RegistroDuplicadoException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
+                //return Conflict("email já existe")
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+                
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
         }
 
 
@@ -84,7 +106,7 @@ namespace Escola.API.Controllers
         {
             var alunoDelete = _context.Alunos.Find(id);
 
-            if(alunoDelete == null)
+            if (alunoDelete == null)
             {
                 return NotFound("Aluno não encontrado!");
             }
