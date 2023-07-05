@@ -20,8 +20,9 @@ namespace Escola.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Aluno aluno )
+        public IActionResult Post([FromBody] AlunoDTO alunoDTO )
         {
+            var aluno = new Aluno(alunoDTO);
             var alunoExist =  _context.Alunos.Any(x => x.Email == aluno.Email);
             if (alunoExist)
             {
@@ -63,8 +64,9 @@ namespace Escola.API.Controllers
 
         [HttpPut]
         [Route("/{id}")]
-        public IActionResult AtualizaAluno([FromBody] Aluno aluno, [FromRoute] int id)
+        public IActionResult AtualizaAluno([FromBody] AlunoDTO alunoDTO, [FromRoute] int id)
         {
+            var aluno = new Aluno(alunoDTO);
             if (!ModelState.IsValid) return BadRequest("Dados inválidos, favor verificar o formato obrigatório dos dados!");
 
             var alunoDB = _context.Alunos.FirstOrDefault(x => x.Id == id);
