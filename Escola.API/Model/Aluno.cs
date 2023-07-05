@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Escola.API.DTO;
+using System;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Escola.API.Model
@@ -14,6 +15,27 @@ namespace Escola.API.Model
         public string Email { get; set; }
         public DateTime DataNascimento { get; set; }
 
+        public Aluno()
+        {
+            
+        }
+
+
+        public Aluno(AlunoDTO aluno)
+        {
+            Id = aluno.Id;
+            Nome = aluno.Nome;
+            Sobrenome = aluno.Sobrenome;
+            Idade = aluno.Idade;
+            Genero = aluno.Genero;
+            Telefone = aluno.Telefone;
+            Email = aluno.Email;
+
+            if (DateTime.TryParse(aluno.DataNascimento, out var datanascimento))
+                DataNascimento = datanascimento;
+            else
+                throw new ArgumentException("Erro ao converter a data de nascimento");
+        }
 
         public void Update(Aluno aluno)
         {

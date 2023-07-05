@@ -1,9 +1,8 @@
 ﻿using Escola.API.DataBase;
+using Escola.API.DTO;
 using Escola.API.Model;
 using Microsoft.AspNetCore.Http;
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,7 +40,9 @@ namespace Escola.API.Controllers
         {
             List<Aluno> alunos = _context.Alunos.ToList();
 
-            return Ok(alunos);
+            IEnumerable<AlunoDTO> alunosDtos = alunos.Select(x => new AlunoDTO(x));
+
+            return Ok(alunosDtos);
         }
 
 
@@ -56,7 +57,7 @@ namespace Escola.API.Controllers
                 return NotFound("Aluno não encontrado");
             }
 
-            return Ok(aluno);
+            return Ok(new AlunoDTO(aluno));
         }
 
 
@@ -72,7 +73,7 @@ namespace Escola.API.Controllers
             alunoDB.Update(aluno);
             _context.Alunos.Update(alunoDB);
             _context.SaveChanges();
-            return Ok(alunoDB);
+            return Ok(new AlunoDTO(alunoDB));
         }
 
         [HttpDelete]
