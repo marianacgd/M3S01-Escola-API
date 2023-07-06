@@ -9,7 +9,7 @@ namespace Escola.API.Interfaces
         public Aluno ObterPorId(int id);
         public Aluno Atualizar(Aluno aluno);
         public List<Aluno> ObterTodos();
-        public void Excluir(int id);
+        public void Excluir(Aluno id);
         public bool EmailJaCadastrado(string email);
     }
 }

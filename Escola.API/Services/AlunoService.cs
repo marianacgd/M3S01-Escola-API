@@ -1,9 +1,7 @@
-﻿using Escola.API.DataBase;
-using Escola.API.Exceptions;
+﻿using Escola.API.Exceptions;
 using Escola.API.Interfaces;
 using Escola.API.Model;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Escola.API.Services
 {
@@ -60,7 +58,7 @@ namespace Escola.API.Services
                 throw new NotFoundException("Aluno não encontrado");
             }
 
-            _alunoRepository.Excluir(id);
+            _alunoRepository.Excluir(alunoDelete);
         }
     }
 }
