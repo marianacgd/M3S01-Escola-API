@@ -1,4 +1,6 @@
 using Escola.API.DataBase;
+using Escola.API.Interfaces;
+using Escola.API.Repositories;
 using Escola.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +34,7 @@ namespace Escola.API
             services.AddControllers();
 
             services.AddScoped<IAlunoService,AlunoService>();
+            services.AddScoped<IAlunoRepository, AlunoRepository>();
 
             services.AddSwaggerGen(c =>
             {

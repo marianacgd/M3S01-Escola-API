@@ -91,9 +91,10 @@ namespace Escola.API.Controllers
             try
             {
                 var aluno = new Aluno(alunoDTO);
+                aluno.Id = id;
                 if (!ModelState.IsValid) return BadRequest("Dados inválidos, favor verificar o formato obrigatório dos dados!");
 
-                aluno = _alunoService.Atualizar(aluno, id);
+                aluno = _alunoService.Atualizar(aluno);
 
                 return Ok(new AlunoDTO(aluno));
             }

@@ -7,7 +7,7 @@ namespace Escola.API
     {
         public Aluno Criar(Aluno aluno);
         public Aluno ObterPorId(int id);
-        public Aluno Atualizar(Aluno aluno, int id);
+        public Aluno Atualizar(Aluno aluno);
         public List<Aluno> ObterAlunos();
         public void DeletarAluno(int id);
     }

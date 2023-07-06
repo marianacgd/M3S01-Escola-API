@@ -1,5 +1,6 @@
 ﻿using Escola.API.DataBase;
 using Escola.API.Exceptions;
+using Escola.API.Interfaces;
 using Escola.API.Model;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,29 +9,28 @@ namespace Escola.API.Services
 {
     public class AlunoService : IAlunoService
     {
-        private readonly EscolaDbContexto _context;
-
-        public AlunoService(EscolaDbContexto contexto)
+       
+        private readonly IAlunoRepository _alunoRepository;
+        public AlunoService(IAlunoRepository alunoRepository)
         {
-            _context = contexto;
+            _alunoRepository = alunoRepository;
         }
 
         public Aluno Criar(Aluno aluno)
         {
-            var alunoExist = _context.Alunos.Any(x => x.Email == aluno.Email);
+            var alunoExist = _alunoRepository.EmailJaCadastrado(aluno.Email);
             if (alunoExist)
             {
                 throw new RegistroDuplicadoException("email já cadastrado");
             }
 
-            _context.Alunos.Add(aluno);
-            _context.SaveChanges();
+            _alunoRepository.Inserir(aluno);
             return aluno;
         }
 
         public Aluno ObterPorId(int id)
         {
-            Aluno aluno = _context.Alunos.FirstOrDefault(x => x.Id == id);
+            Aluno aluno = _alunoRepository.ObterPorId(id);
 
             if (aluno == null)
             {
@@ -39,30 +39,28 @@ namespace Escola.API.Services
             return aluno;
         }
 
-        public List<Aluno> ObterAlunos() => _context.Alunos.ToList();
+        public List<Aluno> ObterAlunos() => _alunoRepository.ObterTodos();
 
-        public Aluno Atualizar(Aluno aluno, int id)
+        public Aluno Atualizar(Aluno aluno)
         {
-            var alunoDB = _context.Alunos.FirstOrDefault(x => x.Id == id);
+            var alunoDB = _alunoRepository.Atualizar(aluno);
             if (alunoDB == null) throw new NotFoundException("Aluno não encontrado");
 
             alunoDB.Update(aluno);
-            _context.Alunos.Update(alunoDB);
-            _context.SaveChanges();
+           //
             return alunoDB;
         }
 
         public void DeletarAluno(int id)
         {
-            var alunoDelete = _context.Alunos.Find(id);
+            var alunoDelete = _alunoRepository.ObterPorId(id);
 
             if (alunoDelete == null)
             {
                 throw new NotFoundException("Aluno não encontrado");
             }
 
-            _context.Alunos.Remove(alunoDelete);
-            _context.SaveChanges();
+            _alunoRepository.Excluir(id);
         }
     }
 }
