@@ -7,6 +7,8 @@ namespace Escola.API.DataBase
     {
         public virtual DbSet<Aluno> Alunos { get; set; }
 
+        public virtual DbSet<Turma> Turmas { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Password=P@ssword;Persist Security Info=True;User ID=sa;Initial Catalog=EscolaDB-Audaces;Data Source=tcp:localhost,1433");
@@ -61,6 +63,28 @@ namespace Escola.API.DataBase
                                         .HasColumnName("DATA_NASCIMENTO")
                                         .HasColumnType("datetime2");
 
+
+            modelBuilder.Entity<Turma>().ToTable("TURMA");
+
+            modelBuilder.Entity<Turma>().Property(x => x.Id)
+                                        .HasColumnType("int")
+                                        .HasColumnName("ID");
+
+            modelBuilder.Entity<Turma>().HasKey(x => x.Id);
+
+            modelBuilder.Entity<Turma>().Property(x => x.Curso)
+                            .HasColumnType("varchar")
+                            .HasMaxLength(50)
+                            .HasDefaultValue("Curso Basico")
+                            .HasColumnName("CURSO");
+
+            modelBuilder.Entity<Turma>().Property(x => x.Nome)
+                            .HasColumnType("varchar")
+                            .HasMaxLength(50)
+                            .HasColumnName("Nome");
+
+            modelBuilder.Entity<Turma>().HasIndex(x => x.Nome)
+                                        .IsUnique();
 
         }
     }
