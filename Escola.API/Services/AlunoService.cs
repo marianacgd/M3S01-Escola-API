@@ -1,5 +1,6 @@
 ﻿using Escola.API.Exceptions;
-using Escola.API.Interfaces;
+using Escola.API.Interfaces.Repositories;
+using Escola.API.Interfaces.Services;
 using Escola.API.Model;
 using System.Collections.Generic;
 

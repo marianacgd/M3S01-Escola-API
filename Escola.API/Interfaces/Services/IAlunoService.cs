@@ -1,7 +1,7 @@
 ﻿using Escola.API.Model;
 using System.Collections.Generic;
 
-namespace Escola.API
+namespace Escola.API.Interfaces.Services
 {
     public interface IAlunoService
     {

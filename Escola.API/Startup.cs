@@ -1,6 +1,7 @@
 using Escola.API.DataBase;
-using Escola.API.Interfaces;
-using Escola.API.Repositories;
+using Escola.API.DataBase.Repositories;
+using Escola.API.Interfaces.Repositories;
+using Escola.API.Interfaces.Services;
 using Escola.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

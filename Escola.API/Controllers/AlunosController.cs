@@ -1,5 +1,6 @@
 ﻿using Escola.API.DTO;
 using Escola.API.Exceptions;
+using Escola.API.Interfaces.Services;
 using Escola.API.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

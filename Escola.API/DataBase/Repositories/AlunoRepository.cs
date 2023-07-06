@@ -1,12 +1,12 @@
 ﻿using Escola.API.DataBase;
 using Escola.API.DTO;
-using Escola.API.Interfaces;
+using Escola.API.Interfaces.Repositories;
 using Escola.API.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Escola.API.Repositories
+namespace Escola.API.DataBase.Repositories
 {
     public class AlunoRepository : IAlunoRepository
     {
@@ -42,7 +42,7 @@ namespace Escola.API.Repositories
 
         public List<Aluno> ObterTodos() => _context.Alunos.ToList();
 
-        public bool EmailJaCadastrado(string email) 
+        public bool EmailJaCadastrado(string email)
             => _context.Alunos.Any(x => x.Email == email);
 
 
