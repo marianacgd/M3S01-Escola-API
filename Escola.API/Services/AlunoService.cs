@@ -21,6 +21,8 @@ namespace Escola.API.Services
             {
                 throw new RegistroDuplicadoException("email já cadastrado");
             }
+            var teste = 5;
+
 
             _alunoRepository.Inserir(aluno);
             return aluno;
