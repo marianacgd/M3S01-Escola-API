@@ -1,4 +1,5 @@
 ﻿using Escola.API.Model;
+using System.Collections.Generic;
 
 namespace Escola.API
 {
@@ -6,6 +7,8 @@ namespace Escola.API
     {
         public Aluno Criar(Aluno aluno);
         public Aluno ObterPorId(int id);
-
+        public Aluno Atualizar(Aluno aluno, int id);
+        public List<Aluno> ObterAlunos();
+        public void DeletarAluno(int id);
     }
 }

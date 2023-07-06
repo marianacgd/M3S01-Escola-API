@@ -1,8 +1,6 @@
-﻿using Escola.API.DataBase;
-using Escola.API.DTO;
+﻿using Escola.API.DTO;
 using Escola.API.Exceptions;
 using Escola.API.Model;
-using Escola.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,12 +13,10 @@ namespace Escola.API.Controllers
     [Route("[controller]")]
     public class AlunosController : ControllerBase
     {
-        private readonly EscolaDbContexto _context;
         private readonly IAlunoService _alunoService;
 
-        public AlunosController(EscolaDbContexto contexto, IAlunoService alunoService)
+        public AlunosController( IAlunoService alunoService)
         {
-            _context = contexto;
             _alunoService = alunoService;
         }
 
@@ -49,11 +45,16 @@ namespace Escola.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            List<Aluno> alunos = _context.Alunos.ToList();
-
-            IEnumerable<AlunoDTO> alunosDtos = alunos.Select(x => new AlunoDTO(x));
-
-            return Ok(alunosDtos);
+            try
+            {   
+                var alunos = _alunoService.ObterAlunos();
+                IEnumerable<AlunoDTO> alunosDtos = alunos.Select(x => new AlunoDTO(x));       
+                return Ok(alunosDtos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }            
         }
 
 
@@ -80,7 +81,6 @@ namespace Escola.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
         }
 
 
@@ -88,31 +88,34 @@ namespace Escola.API.Controllers
         [Route("/{id}")]
         public IActionResult AtualizaAluno([FromBody] AlunoDTO alunoDTO, [FromRoute] int id)
         {
-            var aluno = new Aluno(alunoDTO);
-            if (!ModelState.IsValid) return BadRequest("Dados inválidos, favor verificar o formato obrigatório dos dados!");
+            try
+            {
+                var aluno = new Aluno(alunoDTO);
+                if (!ModelState.IsValid) return BadRequest("Dados inválidos, favor verificar o formato obrigatório dos dados!");
 
-            var alunoDB = _context.Alunos.FirstOrDefault(x => x.Id == id);
-            if (alunoDB == null) return NotFound("Aluno não encontrada");
+                aluno = _alunoService.Atualizar(aluno, id);
 
-            alunoDB.Update(aluno);
-            _context.Alunos.Update(alunoDB);
-            _context.SaveChanges();
-            return Ok(new AlunoDTO(alunoDB));
+                return Ok(new AlunoDTO(aluno));
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete]
         [Route("/{id}")]
         public IActionResult Delete(int id)
         {
-            var alunoDelete = _context.Alunos.Find(id);
 
-            if (alunoDelete == null)
+            try
             {
-                return NotFound("Aluno não encontrado!");
+               _alunoService.DeletarAluno(id);
             }
-
-            _context.Alunos.Remove(alunoDelete);
-            _context.SaveChanges();
+            catch (NotFoundException ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, ex.Message);
+            }
 
             return StatusCode(204);
         }
