@@ -19,6 +19,7 @@ namespace Escola.API.Controllers
         public AlunosController( IAlunoService alunoService)
         {
             _alunoService = alunoService;
+            _alunoService.te
         }
 
         [HttpPost]
@@ -44,7 +45,7 @@ namespace Escola.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<AlunoDTO> Get()
         {
             try
             {   

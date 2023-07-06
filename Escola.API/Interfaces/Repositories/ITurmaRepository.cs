@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Escola.API.Interfaces.Repositories
 {
-    public interface IAlunoRepository : IBaseRepository<Aluno,int>
+    public interface ITurmaRepository : IBaseRepository<Turma, int>
     {
-        public bool EmailJaCadastrado(string email);
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Escola.API.Exceptions;
+﻿using Escola.API.DataBase.Repositories;
+using Escola.API.Exceptions;
 using Escola.API.Interfaces.Repositories;
 using Escola.API.Interfaces.Services;
 using Escola.API.Model;
@@ -14,7 +15,6 @@ namespace Escola.API.Services
         {
             _alunoRepository = alunoRepository;
         }
-
         public Aluno Criar(Aluno aluno)
         {
             var alunoExist = _alunoRepository.EmailJaCadastrado(aluno.Email);
@@ -22,8 +22,6 @@ namespace Escola.API.Services
             {
                 throw new RegistroDuplicadoException("email já cadastrado");
             }
-            var teste = 5;
-
 
             _alunoRepository.Inserir(aluno);
             return aluno;

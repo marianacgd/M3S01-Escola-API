@@ -72,6 +72,7 @@ namespace Escola.API.DataBase
 
             modelBuilder.Entity<Turma>().HasKey(x => x.Id);
 
+
             modelBuilder.Entity<Turma>().Property(x => x.Curso)
                             .HasColumnType("varchar")
                             .HasMaxLength(50)
