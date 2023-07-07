@@ -4,6 +4,7 @@ using Escola.API.Interfaces.Services;
 using Escola.API.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,12 @@ namespace Escola.API.Controllers
     public class AlunosController : ControllerBase
     {
         private readonly IAlunoService _alunoService;
+        private readonly IMemoryCache _memoryCache;
 
-        public AlunosController( IAlunoService alunoService)
+        public AlunosController( IAlunoService alunoService, IMemoryCache memoryCache)
         {
             _alunoService = alunoService;
-            _alunoService.te
+            _memoryCache = memoryCache;
         }
 
         [HttpPost]
@@ -66,7 +68,12 @@ namespace Escola.API.Controllers
         {
             try
             {
-                return Ok(new AlunoDTO(_alunoService.ObterPorId(id)));
+                AlunoDTO aluno;
+                if(!_memoryCache.TryGetValue<AlunoDTO>($"aluno:{id}", out  aluno)){
+                     aluno = new AlunoDTO(_alunoService.ObterPorId(id));
+                    _memoryCache.Set<AlunoDTO>($"aluno:{id}", aluno, new TimeSpan(0,0,20));
+                }
+                return Ok(aluno);
             }
 
             catch (RegistroDuplicadoException ex)
@@ -98,6 +105,11 @@ namespace Escola.API.Controllers
 
                 aluno = _alunoService.Atualizar(aluno);
 
+                //var alunodto = new AlunoDTO(aluno);
+                //_memoryCache.Set<AlunoDTO>($"aluno:{id}", alunodto, new TimeSpan(0, 0, 20));
+
+                _memoryCache.Remove($"aluno:{id}");
+
                 return Ok(new AlunoDTO(aluno));
             }
             catch (NotFoundException ex)
@@ -114,6 +126,7 @@ namespace Escola.API.Controllers
             try
             {
                _alunoService.DeletarAluno(id);
+                _memoryCache.Remove($"aluno:{id}");
             }
             catch (NotFoundException ex)
             {

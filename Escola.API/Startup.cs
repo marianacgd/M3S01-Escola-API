@@ -36,6 +36,11 @@ namespace Escola.API
 
             services.AddScoped<IAlunoService,AlunoService>();
             services.AddScoped<IAlunoRepository, AlunoRepository>();
+            services.AddScoped<ITurmaRepository, TurmaRepository>();
+
+            services.AddMemoryCache();
+
+
 
             services.AddSwaggerGen(c =>
             {
