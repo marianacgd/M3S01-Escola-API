@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Escola.API.DataBase.Repositories
 {
-    public class TurmaRepository : BaseRepository<Turma>, ITurmaRepository
+    public class TurmaRepository : BaseRepository<Turma, int>, ITurmaRepository
     {
         public TurmaRepository(EscolaDbContexto contexto) : base (contexto) 
         {
