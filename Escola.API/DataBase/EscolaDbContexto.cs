@@ -6,8 +6,10 @@ namespace Escola.API.DataBase
     public class EscolaDbContexto : DbContext
     {
         public virtual DbSet<Aluno> Alunos { get; set; }
-
         public virtual DbSet<Turma> Turmas { get; set; }
+        public virtual DbSet<Boletim> Boletins { get; set; }
+        public virtual DbSet<NotasMateria> NotasMaterias { get; set; }
+        public virtual DbSet<Materia> Materias { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -72,7 +74,6 @@ namespace Escola.API.DataBase
 
             modelBuilder.Entity<Turma>().HasKey(x => x.Id);
 
-
             modelBuilder.Entity<Turma>().Property(x => x.Curso)
                             .HasColumnType("varchar")
                             .HasMaxLength(50)
@@ -87,6 +88,60 @@ namespace Escola.API.DataBase
             modelBuilder.Entity<Turma>().HasIndex(x => x.Nome)
                                         .IsUnique();
 
+            
+            modelBuilder.Entity<Boletim>().ToTable("BOLETIM");
+
+            modelBuilder.Entity<Boletim>().Property(x => x.Id)
+                                        .HasColumnName("PK_ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Boletim>().HasKey(x => x.Id)
+                                          .HasName("Pk_boletim_id");
+
+            modelBuilder.Entity<Boletim>().HasIndex(x => x.Id)
+                                        .IsUnique();
+
+            modelBuilder.Entity<Boletim>().Property(x => x.orderDate)
+                                        .HasColumnName("ORDER_DATA")
+                                        .HasColumnType("datetime2");
+
+            
+
+            modelBuilder.Entity<NotasMateria>().ToTable("NOTAS_MATERIA");
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.Id)
+                                        .HasColumnName("PK_ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasKey(x => x.Id)
+                                          .HasName("Pk_NotasMateria_id");
+
+            modelBuilder.Entity<NotasMateria>().Property(x => x.Nota)
+                                        .IsRequired()
+                                        .HasColumnName("NOTA")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<NotasMateria>().HasIndex(x => x.Id)
+                                        .IsUnique();
+
+
+            modelBuilder.Entity<Materia>().ToTable("MATERIA");
+
+            modelBuilder.Entity<Materia>().Property(x => x.Id)
+                                        .HasColumnName("PK_ID")
+                                        .HasColumnType("INT");
+
+            modelBuilder.Entity<Materia>().HasKey(x => x.Id)
+                                          .HasName("Pk_Materia_id");
+
+            modelBuilder.Entity<Materia>().Property(x => x.Nome)
+                                        .IsRequired()
+                                        .HasColumnName("NOME")
+                                        .HasColumnType("VARCHAR")
+                                        .HasMaxLength(50);
+
+            modelBuilder.Entity<Materia>().HasIndex(x => x.Nome)
+                                        .IsUnique();
         }
     }
 }
